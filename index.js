@@ -7,7 +7,7 @@ const rimraf = require('rimraf');
 const WORKDIR = join(process.cwd(), '_persist_action_dir');
 
 async function storeData(variable, data){
-    //var client = artifact.create();
+    var client = new artifact();
     const file = join(WORKDIR, `${variable}.txt`);
 
     // cleanup old directories if needed
@@ -15,10 +15,10 @@ async function storeData(variable, data){
     mkdirSync(WORKDIR);
 
     writeFileSync(file, data, { encoding: 'utf8' });
-    await artifact.uploadArtifact(variable, [file], process.cwd())
+    await client.uploadArtifact(variable, [file], process.cwd())
 }
 async function loadData(variables){
-    //var client = artifact.create();
+    var client = new artifact();
 
     // cleanup old directories if needed
     rimraf.sync(WORKDIR);
@@ -29,7 +29,7 @@ async function loadData(variables){
 
         try {
             const file = join(WORKDIR, `${v}.txt`);
-            await artifact.downloadArtifact(v);
+            await client.downloadArtifact(v);
             data = readFileSync(file, { encoding: 'utf8' }).toString();
         } catch (error) {
             core.warning(`Variable ${v} not found`)
