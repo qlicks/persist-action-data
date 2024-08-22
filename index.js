@@ -1,13 +1,13 @@
 const { join } = require('path');
 const { readFileSync, mkdirSync, writeFileSync } = require('fs');
 const core = require('@actions/core');
-const artifact = require('@actions/artifact');
+const {DefaultArtifactClient} = require('@actions/artifact')
 const rimraf = require('rimraf');
 
 const WORKDIR = join(process.cwd(), '_persist_action_dir');
 
 async function storeData(variable, data){
-    var client = new artifact();
+    var client = new DefaultArtifactClient();
     const file = join(WORKDIR, `${variable}.txt`);
 
     // cleanup old directories if needed
@@ -18,7 +18,7 @@ async function storeData(variable, data){
     await client.uploadArtifact(variable, [file], process.cwd())
 }
 async function loadData(variables){
-    var client = new artifact();
+    var client = new DefaultArtifactClient();
 
     // cleanup old directories if needed
     rimraf.sync(WORKDIR);
